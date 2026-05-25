@@ -1,0 +1,4680 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Swing Pool API",
+    "version": "1.0.0",
+    "description": "Backend API for Swing Pool, a subscription platform for golf performance tracking, charity support, and monthly rewards."
+  },
+  "servers": [{ "url": "/api/v1", "description": "Versioned API server" }],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "SuccessResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": true },
+          "message": {
+            "type": "string",
+            "example": "Request completed successfully."
+          },
+          "data": { "nullable": true },
+          "meta": { "type": "object", "nullable": true },
+          "requestId": { "type": "string", "nullable": true },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["success", "message", "data", "requestId", "timestamp"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean", "example": false },
+          "message": {
+            "type": "string",
+            "example": "Request validation failed."
+          },
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": { "type": "string", "example": "VALIDATION_ERROR" },
+              "details": { "nullable": true }
+            }
+          },
+          "requestId": { "type": "string", "nullable": true },
+          "timestamp": { "type": "string", "format": "date-time" }
+        },
+        "required": ["success", "message", "error", "requestId", "timestamp"]
+      },
+      "PaginationMeta": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "integer", "minimum": 1 },
+          "pageSize": { "type": "integer", "minimum": 1 },
+          "totalItems": { "type": "integer", "minimum": 0 },
+          "totalPages": { "type": "integer", "minimum": 0 },
+          "hasNextPage": { "type": "boolean" },
+          "hasPreviousPage": { "type": "boolean" }
+        }
+      },
+      "AuthTokenPair": {
+        "type": "object",
+        "properties": {
+          "accessToken": { "type": "string" },
+          "refreshToken": { "type": "string" },
+          "accessTokenExpiresIn": { "type": "string", "example": "1d" },
+          "refreshTokenExpiresIn": { "type": "string", "example": "7d" }
+        },
+        "required": ["accessToken", "refreshToken"]
+      },
+      "ProfileVerificationStatus": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string" },
+          "userStatus": { "type": "string" },
+          "emailVerified": { "type": "boolean" },
+          "profileCompleted": { "type": "boolean" },
+          "profileVerificationStatus": { "type": "string" },
+          "eligibleForSubscription": { "type": "boolean" }
+        }
+      },
+      "SubscriptionPlan": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "code": { "type": "string", "example": "monthly" },
+          "name": { "type": "string", "example": "Monthly" },
+          "description": { "type": "string" },
+          "priceInr": { "type": "number", "example": 179 },
+          "billingCycleDays": { "type": "integer", "example": 30 },
+          "hierarchyLevel": { "type": "integer", "example": 1 },
+          "currency": { "type": "string", "example": "INR" },
+          "isDefault": { "type": "boolean" },
+          "isActive": { "type": "boolean" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SubscriptionCoupon": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "code": { "type": "string", "example": "WELCOME10" },
+          "discountType": { "type": "string", "enum": ["percentage", "flat"] },
+          "discountValue": { "type": "number", "example": 10 },
+          "maxDiscountInr": { "type": "number", "nullable": true },
+          "minOrderAmountInr": { "type": "number", "nullable": true },
+          "maxRedemptions": { "type": "integer", "nullable": true },
+          "redeemedCount": { "type": "integer" },
+          "validFrom": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "validTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "applicablePlanCodes": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "isActive": { "type": "boolean" },
+          "metadata": { "type": "object", "additionalProperties": true }
+        }
+      },
+      "SubscriptionConfig": {
+        "type": "object",
+        "properties": {
+          "gracePeriodDays": { "type": "integer", "minimum": 1, "example": 7 },
+          "mandatoryCharityPercentage": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "example": 10
+          },
+          "currency": { "type": "string", "example": "INR" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SubscriptionRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "userId": { "type": "string" },
+          "planId": { "type": "string" },
+          "planCode": { "type": "string" },
+          "planNameSnapshot": { "type": "string" },
+          "planPriceInrSnapshot": { "type": "number" },
+          "currency": { "type": "string", "example": "INR" },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending_payment",
+              "active",
+              "canceled",
+              "grace_period",
+              "expired",
+              "payment_failed"
+            ]
+          },
+          "startAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "endAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "nextBillingAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "gracePeriodEndsAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "canceledAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "autoRenew": { "type": "boolean" },
+          "mandatoryCharityPercentageSnapshot": { "type": "number" },
+          "charityContributionInr": { "type": "number" },
+          "latestCouponCode": { "type": "string", "nullable": true },
+          "lastPaymentIntentId": { "type": "string", "nullable": true },
+          "lastPaymentStatus": { "type": "string", "nullable": true },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SubscriptionHistoryRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "subscriptionId": { "type": "string" },
+          "userId": { "type": "string" },
+          "eventType": { "type": "string" },
+          "previousStatus": { "type": "string", "nullable": true },
+          "nextStatus": { "type": "string", "nullable": true },
+          "previousPlanCode": { "type": "string", "nullable": true },
+          "nextPlanCode": { "type": "string", "nullable": true },
+          "actorId": { "type": "string", "nullable": true },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "occurredAt": { "type": "string", "format": "date-time" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SubscriptionCancellationRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "subscriptionId": { "type": "string" },
+          "userId": { "type": "string" },
+          "canceledAt": { "type": "string", "format": "date-time" },
+          "reason": { "type": "string" },
+          "immediate": { "type": "boolean" },
+          "statusBeforeCancel": { "type": "string", "nullable": true },
+          "statusAfterCancel": { "type": "string", "nullable": true },
+          "actorId": { "type": "string", "nullable": true },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "SubscriptionUpgradePreview": {
+        "type": "object",
+        "properties": {
+          "subscription": { "$ref": "#/components/schemas/SubscriptionRecord" },
+          "currentPlan": { "$ref": "#/components/schemas/SubscriptionPlan" },
+          "targetPlan": { "$ref": "#/components/schemas/SubscriptionPlan" },
+          "proration": {
+            "type": "object",
+            "properties": {
+              "calculatedAt": { "type": "string", "format": "date-time" },
+              "periodStart": { "type": "string", "format": "date-time" },
+              "periodEnd": { "type": "string", "format": "date-time" },
+              "remainingRatio": { "type": "number" },
+              "unusedValueInr": { "type": "number" },
+              "targetPlanPriceInr": { "type": "number" },
+              "proratedUpgradeChargeInr": { "type": "number" }
+            }
+          }
+        }
+      },
+      "PaymentRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "userId": { "type": "string" },
+          "amount": {
+            "type": "integer",
+            "description": "Amount in minor units (paise)."
+          },
+          "amountMajor": { "type": "string", "example": "179.00" },
+          "currency": { "type": "string", "example": "inr" },
+          "description": { "type": "string" },
+          "stripePaymentIntentId": { "type": "string" },
+          "stripeCheckoutSessionId": { "type": "string", "nullable": true },
+          "state": {
+            "type": "string",
+            "enum": [
+              "processing",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "timeout",
+              "retry_required"
+            ]
+          },
+          "stateReason": { "type": "string" },
+          "sourceDomain": { "type": "string" },
+          "sourceEntityId": { "type": "string" },
+          "sourceAction": { "type": "string" },
+          "attemptCount": { "type": "integer" },
+          "retryCount": { "type": "integer" },
+          "timeoutAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "finalizedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "stripeLastEventId": { "type": "string" },
+          "stripeLastEventType": { "type": "string" },
+          "mismatchDetected": { "type": "boolean" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "PaymentLedgerEntry": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "paymentId": { "type": "string" },
+          "userId": { "type": "string" },
+          "stripePaymentIntentId": { "type": "string" },
+          "stripeEventId": { "type": "string" },
+          "idempotencyKey": { "type": "string" },
+          "entryType": {
+            "type": "string",
+            "enum": [
+              "intent_created",
+              "processing",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "timeout",
+              "retry_required"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["debit", "credit", "neutral"]
+          },
+          "amountMinor": { "type": "integer" },
+          "amountMajor": { "type": "string" },
+          "currency": { "type": "string" },
+          "occurredAt": { "type": "string", "format": "date-time" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CharityRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "code": { "type": "string", "example": "teach-for-india" },
+          "name": { "type": "string", "example": "Teach For India" },
+          "mission": { "type": "string" },
+          "website": { "type": "string", "nullable": true },
+          "currency": { "type": "string", "example": "INR" },
+          "supportedCurrencies": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "totalRaised": { "type": "number", "example": 0 },
+          "totalRaisedMajor": { "type": "string", "example": "0.00" },
+          "isFeatured": { "type": "boolean" },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive", "archived"]
+          },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CharitySelectionRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "userId": { "type": "string" },
+          "charityId": { "type": "string" },
+          "currency": { "type": "string", "example": "INR" },
+          "status": { "type": "string", "enum": ["active", "superseded"] },
+          "effectiveFrom": { "type": "string", "format": "date-time" },
+          "effectiveTo": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "changedBy": { "type": "string", "nullable": true },
+          "reason": { "type": "string" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CharityContributionRule": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "ruleKey": { "type": "string", "example": "INR" },
+          "currency": { "type": "string", "example": "INR" },
+          "gatewayFeePercentage": { "type": "number", "example": 2 },
+          "prizePoolPercentage": { "type": "number", "example": 35 },
+          "mandatoryCharityPercentage": { "type": "number", "example": 10 },
+          "status": { "type": "string", "enum": ["active", "archived"] },
+          "effectiveFrom": { "type": "string", "format": "date-time" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CharityDonationRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "userId": { "type": "string" },
+          "charityId": { "type": "string" },
+          "paymentId": { "type": "string" },
+          "paymentIntentId": { "type": "string" },
+          "subscriptionId": { "type": "string", "nullable": true },
+          "source": {
+            "type": "string",
+            "enum": ["independent", "subscription_addon"]
+          },
+          "currency": { "type": "string", "example": "INR" },
+          "amountMinor": { "type": "integer" },
+          "amountMajor": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": [
+              "processing",
+              "succeeded",
+              "failed",
+              "cancelled",
+              "timeout",
+              "retry_required"
+            ]
+          },
+          "finalizedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "userMessage": { "type": "string" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CharityAllocationLedgerEntry": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "idempotencyKey": { "type": "string" },
+          "paymentId": { "type": "string" },
+          "userId": { "type": "string" },
+          "charityId": { "type": "string", "nullable": true },
+          "subscriptionId": { "type": "string", "nullable": true },
+          "donationId": { "type": "string", "nullable": true },
+          "entryType": {
+            "type": "string",
+            "enum": [
+              "gateway_fee",
+              "prize_pool",
+              "mandatory_charity",
+              "optional_charity_addon",
+              "platform_revenue",
+              "independent_donation_charity",
+              "manual_adjustment_credit",
+              "manual_adjustment_debit"
+            ]
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["debit", "credit", "neutral"]
+          },
+          "currency": { "type": "string", "example": "INR" },
+          "amountMinor": { "type": "integer" },
+          "amountMajor": { "type": "string" },
+          "percentageApplied": { "type": "number", "nullable": true },
+          "occurredAt": { "type": "string", "format": "date-time" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CharityPayoutLedgerEntry": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "charityId": { "type": "string" },
+          "entryType": {
+            "type": "string",
+            "enum": ["payout", "adjustment_credit", "adjustment_debit"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "completed", "cancelled"]
+          },
+          "currency": { "type": "string", "example": "INR" },
+          "amountMinor": { "type": "integer" },
+          "amountMajor": { "type": "string" },
+          "externalReference": { "type": "string" },
+          "notes": { "type": "string" },
+          "createdBy": { "type": "string", "nullable": true },
+          "processedBy": { "type": "string", "nullable": true },
+          "processedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ScoreRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "userId": { "type": "string" },
+          "playedDate": { "type": "string", "format": "date-time" },
+          "playedDateKey": { "type": "string", "example": "2026-04-22" },
+          "value": { "type": "integer", "minimum": 1, "maximum": 45 },
+          "contestNumber": { "type": "integer", "minimum": 1 },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive", "archived"]
+          },
+          "source": { "type": "string", "enum": ["user", "admin"] },
+          "submittedAt": { "type": "string", "format": "date-time" },
+          "submissionLocalDateKey": {
+            "type": "string",
+            "example": "2026-04-22"
+          },
+          "isBackdated": { "type": "boolean" },
+          "confirmedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "confirmedBy": { "type": "string", "nullable": true },
+          "adminEditCount": { "type": "integer" },
+          "lastAdminEditedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastAdminEditedBy": { "type": "string", "nullable": true },
+          "lastAdminEditReason": { "type": "string" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "ScoreCompetitionEligibility": {
+        "type": "object",
+        "properties": {
+          "rule": {
+            "type": "object",
+            "properties": {
+              "qualifyingWindowSize": { "type": "integer", "example": 5 },
+              "ordering": { "type": "string", "example": "submittedAt_desc" },
+              "excludedFromQualifying": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            }
+          },
+          "scores": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ScoreRecord" }
+          },
+          "qualifyingCount": { "type": "integer" },
+          "totalQualifyingSubmissions": { "type": "integer" },
+          "duplicateContestNumbers": {
+            "type": "array",
+            "items": { "type": "integer" }
+          },
+          "isEligible": { "type": "boolean" },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "insufficient_qualifying_scores",
+                "duplicate_contest_numbers"
+              ]
+            }
+          },
+          "generatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DrawSnapshotRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "drawMonthKey": { "type": "string", "example": "2026-04" },
+          "month": { "type": "integer", "minimum": 1, "maximum": 12 },
+          "year": { "type": "integer", "minimum": 2024 },
+          "mode": { "type": "string", "enum": ["random", "algorithmic"] },
+          "drawAt": { "type": "string", "format": "date-time" },
+          "eligibilityCutoffAt": { "type": "string", "format": "date-time" },
+          "prizePoolSnapshotAt": { "type": "string", "format": "date-time" },
+          "numbersPerDraw": { "type": "integer" },
+          "numberRangeMin": { "type": "integer" },
+          "numberRangeMax": { "type": "integer" },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "entries_locked", "published", "cancelled"]
+          },
+          "entriesGeneratedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "publishedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "publishedResultId": { "type": "string", "nullable": true },
+          "prizePoolId": { "type": "string", "nullable": true },
+          "totalEligibleUsers": { "type": "integer" },
+          "totalEntries": { "type": "integer" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DrawEntryRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "drawId": { "type": "string" },
+          "userId": { "type": "string" },
+          "subscriptionId": { "type": "string", "nullable": true },
+          "source": { "type": "string", "enum": ["automatic"] },
+          "contestNumbers": { "type": "array", "items": { "type": "integer" } },
+          "qualifyingScoreIds": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "generatedAt": { "type": "string", "format": "date-time" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DrawPublishedResultRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "drawId": { "type": "string" },
+          "mode": { "type": "string", "enum": ["random", "algorithmic"] },
+          "winningNumbers": { "type": "array", "items": { "type": "integer" } },
+          "status": { "type": "string", "enum": ["published"] },
+          "publishedBy": { "type": "string", "nullable": true },
+          "publishedAt": { "type": "string", "format": "date-time" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "DrawPrizePoolRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "drawId": { "type": "string" },
+          "currency": { "type": "string", "example": "INR" },
+          "snapshotAt": { "type": "string", "format": "date-time" },
+          "subscriptionPrizePoolMinor": { "type": "integer" },
+          "manualJackpotAddedMinor": { "type": "integer" },
+          "jackpotCarryInMinor": { "type": "integer" },
+          "bucket3Minor": { "type": "integer" },
+          "bucket4Minor": { "type": "integer" },
+          "bucket5Minor": { "type": "integer" },
+          "winners3Count": { "type": "integer" },
+          "winners4Count": { "type": "integer" },
+          "winners5Count": { "type": "integer" },
+          "match3PaidMinor": { "type": "integer" },
+          "match4PaidMinor": { "type": "integer" },
+          "match5PaidMinor": { "type": "integer" },
+          "unused3ToRevenueMinor": { "type": "integer" },
+          "unused4ToRevenueMinor": { "type": "integer" },
+          "companyRevenueMinor": { "type": "integer" },
+          "jackpotCarryOutMinor": { "type": "integer" },
+          "finalizedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "WinnerRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "drawId": { "type": "string" },
+          "publishedResultId": { "type": "string" },
+          "entryId": { "type": "string" },
+          "userId": { "type": "string" },
+          "matchCount": { "type": "integer", "enum": [3, 4, 5] },
+          "contestNumbers": { "type": "array", "items": { "type": "integer" } },
+          "matchedNumbers": { "type": "array", "items": { "type": "integer" } },
+          "prizeAmountMinor": { "type": "integer" },
+          "prizeAmountMajor": { "type": "string" },
+          "payoutStatus": {
+            "type": "string",
+            "enum": [
+              "pending_verification",
+              "approved",
+              "rejected",
+              "payout_pending",
+              "paid"
+            ]
+          },
+          "verificationDeadlineAt": { "type": "string", "format": "date-time" },
+          "approvedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "rejectedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "rejectionReason": { "type": "string" },
+          "payoutPendingAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "paidAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "payoutReference": { "type": "string" },
+          "latestProofSubmissionId": { "type": "string", "nullable": true },
+          "proofSubmissionCount": { "type": "integer" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "WinnerProofSubmissionRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "winnerId": { "type": "string" },
+          "drawId": { "type": "string" },
+          "userId": { "type": "string" },
+          "submissionNumber": { "type": "integer" },
+          "files": {
+            "type": "array",
+            "items": { "type": "object", "additionalProperties": true }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["submitted", "approved", "rejected"]
+          },
+          "submittedAt": { "type": "string", "format": "date-time" },
+          "reviewedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "reviewedBy": { "type": "string", "nullable": true },
+          "rejectionReason": { "type": "string" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "NotificationRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "userId": { "type": "string" },
+          "eventType": {
+            "type": "string",
+            "enum": [
+              "signup_verification",
+              "payment_success",
+              "payment_failure",
+              "renewal_reminder",
+              "grace_period_warning",
+              "subscription_expiry",
+              "draw_published",
+              "winner_selected",
+              "proof_rejected",
+              "payout_completed"
+            ]
+          },
+          "title": { "type": "string" },
+          "message": { "type": "string" },
+          "channel": { "type": "string", "enum": ["in_app", "email", "sms"] },
+          "dedupeKey": { "type": "string" },
+          "readAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "inactive", "archived"]
+          },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "NotificationDeliveryRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "notificationId": { "type": "string", "nullable": true },
+          "userId": { "type": "string" },
+          "eventType": { "type": "string" },
+          "channel": { "type": "string", "enum": ["in_app", "email", "sms"] },
+          "provider": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["queued", "sent", "failed", "skipped"]
+          },
+          "recipient": { "type": "string" },
+          "subject": { "type": "string" },
+          "message": { "type": "string" },
+          "dedupeKey": { "type": "string" },
+          "providerMessageId": { "type": "string" },
+          "attemptCount": { "type": "integer" },
+          "lastAttemptAt": { "type": "string", "format": "date-time" },
+          "deliveredAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "errorMessage": { "type": "string" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "JobExecutionRecord": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "jobName": { "type": "string" },
+          "runKey": { "type": "string" },
+          "correlationId": { "type": "string" },
+          "requestId": { "type": "string", "nullable": true },
+          "status": {
+            "type": "string",
+            "enum": ["running", "succeeded", "failed", "skipped"]
+          },
+          "startedAt": { "type": "string", "format": "date-time" },
+          "finishedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "durationMs": { "type": "integer", "nullable": true },
+          "result": { "type": "object", "additionalProperties": true },
+          "errorMessage": { "type": "string" },
+          "metadata": { "type": "object", "additionalProperties": true },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "responses": {
+      "ValidationError": {
+        "description": "Validation failed",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "description": "Authentication failed",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      },
+      "ConflictError": {
+        "description": "Conflict with current state",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    { "name": "Health" },
+    { "name": "Auth" },
+    { "name": "Users" },
+    { "name": "Subscriptions" },
+    { "name": "Payments" },
+    { "name": "Charities" },
+    { "name": "Scores" },
+    { "name": "Draws" },
+    { "name": "Winners" },
+    { "name": "Notifications" },
+    { "name": "Admin" },
+    { "name": "Reports" }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "Health check endpoint",
+        "description": "Returns service and process health metadata.",
+        "responses": { "200": { "description": "Service is healthy" } }
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Register a new user account and return token pair"
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Authenticate user and return token pair"
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Rotate refresh token and mint new access/refresh pair"
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "Revoke refresh session and denylist active access token jti",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities": {
+      "get": { "tags": ["Charities"], "summary": "List charities" },
+      "post": {
+        "tags": ["Charities"],
+        "summary": "Admin create charity",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/rules/effective": {
+      "get": {
+        "tags": ["Charities"],
+        "summary": "Get active charity contribution rule"
+      }
+    },
+    "/charities/my/selection": {
+      "get": {
+        "tags": ["Charities"],
+        "summary": "Get current authenticated user charity selection",
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Charities"],
+        "summary": "Set charity selection for future payments",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/my/selections": {
+      "get": {
+        "tags": ["Charities"],
+        "summary": "List authenticated user charity selection history",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/my/donations": {
+      "get": {
+        "tags": ["Charities"],
+        "summary": "List authenticated user donations",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/my/donations/intents": {
+      "post": {
+        "tags": ["Charities"],
+        "summary": "Create independent donation intent linked to payment infrastructure",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/admin/rules": {
+      "patch": {
+        "tags": ["Charities"],
+        "summary": "Admin update contribution rule percentages",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/admin/payouts": {
+      "get": {
+        "tags": ["Charities"],
+        "summary": "Admin list charity payout ledger entries",
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Charities"],
+        "summary": "Admin create payout ledger entry",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/admin/payouts/{payoutId}": {
+      "patch": {
+        "tags": ["Charities"],
+        "summary": "Admin update payout processing status",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/admin/adjustments": {
+      "post": {
+        "tags": ["Charities"],
+        "summary": "Admin create manual charity adjustment",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/admin/reports/summary": {
+      "get": {
+        "tags": ["Charities"],
+        "summary": "Admin fetch charity allocation and payout aggregates",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/charities/{id}": {
+      "get": { "tags": ["Charities"], "summary": "Get charity by id" },
+      "patch": {
+        "tags": ["Charities"],
+        "summary": "Admin update charity",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/draws/config": {
+      "get": {
+        "tags": ["Draws"],
+        "summary": "Get effective draw engine configuration",
+        "security": [{ "BearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["Draws"],
+        "summary": "Update draw engine configuration",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/draws": {
+      "get": {
+        "tags": ["Draws"],
+        "summary": "GET /draws",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Draws"],
+        "summary": "Create monthly draw snapshot",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/draws/{id}/entries/generate": {
+      "post": {
+        "tags": ["Draws"],
+        "summary": "Generate automatic entries for eligible users",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/draws/{id}/simulations": {
+      "get": {
+        "tags": ["Draws"],
+        "summary": "GET /draws/{id}/simulations",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Draws"],
+        "summary": "Run non-publishing draw simulation",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/draws/{id}/publish": {
+      "post": {
+        "tags": ["Draws"],
+        "summary": "Publish immutable draw result, winners, and prize pool snapshot",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/payments/webhooks/stripe": {
+      "post": {
+        "tags": ["Payments"],
+        "summary": "Stripe webhook receiver (source of truth for payment finalization)"
+      }
+    },
+    "/payments/mine": {
+      "get": {
+        "tags": ["Payments"],
+        "summary": "List authenticated user payments",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/payments/intents": {
+      "post": {
+        "tags": ["Payments"],
+        "summary": "Create Stripe payment intent and local payment attempt record",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/scores": {
+      "post": {
+        "tags": ["Scores"],
+        "summary": "Submit user score (stored in full history and confirmed immutable)",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/scores/mine": {
+      "get": {
+        "tags": ["Scores"],
+        "summary": "List authenticated user score history with pagination",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/scores/mine/competition/qualifying": {
+      "get": {
+        "tags": ["Scores"],
+        "summary": "Get latest five qualifying competition scores",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/scores/mine/competition/eligibility": {
+      "get": {
+        "tags": ["Scores"],
+        "summary": "Get current competition eligibility status",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/scores/mine/{id}": {
+      "get": {
+        "tags": ["Scores"],
+        "summary": "Get score history record by id for authenticated user",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/scores/admin/{id}": {
+      "patch": {
+        "tags": ["Scores"],
+        "summary": "Admin edit score with full audit logging",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/subscriptions/plans": {
+      "get": {
+        "tags": ["Subscriptions"],
+        "summary": "List active subscription plans"
+      }
+    },
+    "/subscriptions/config": {
+      "get": {
+        "tags": ["Subscriptions"],
+        "summary": "Get effective subscription configuration"
+      }
+    },
+    "/subscriptions": {
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "Create a subscription in pending payment state",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/subscriptions/{subscriptionId}/cancel": {
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "Cancel a subscription immediately",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/subscriptions/{subscriptionId}/upgrade-preview": {
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "Preview prorated amount for an allowed upgrade path",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/subscriptions/admin/plans": {
+      "get": {
+        "tags": ["Subscriptions"],
+        "summary": "GET /subscriptions/admin/plans",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "Admin create a subscription plan",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/subscriptions/admin/coupons": {
+      "get": {
+        "tags": ["Subscriptions"],
+        "summary": "GET /subscriptions/admin/coupons",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "Admin create subscription coupon",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/users/me": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "PATCH /users/me",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get authenticated user profile",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/users/me/profile": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Complete or update authenticated user profile fields",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/users/me/profile-status": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Get profile verification state used for subscription eligibility",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/winners/mine": {
+      "get": {
+        "tags": ["Winners"],
+        "summary": "List authenticated user winner records",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/winners/{winnerId}/proofs": {
+      "get": {
+        "tags": ["Winners"],
+        "summary": "GET /winners/{winnerId}/proofs",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "winnerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Winners"],
+        "summary": "Submit winner proof files (max 2 files)",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/winners/admin": {
+      "post": {
+        "tags": ["Winners"],
+        "summary": "POST /winners/admin",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Winners"],
+        "summary": "Admin list winners by draw and payout status",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/winners/admin/{winnerId}/proofs/{proofId}/review": {
+      "patch": {
+        "tags": ["Winners"],
+        "summary": "Admin approve or reject submitted proof",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/winners/admin/{winnerId}/payout": {
+      "patch": {
+        "tags": ["Winners"],
+        "summary": "Admin update payout workflow status",
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/": {
+      "get": {
+        "tags": ["Health"],
+        "summary": "GET /",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/auth/me": {
+      "get": {
+        "tags": ["Auth"],
+        "summary": "GET /auth/me",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/auth/verify-email": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "POST /auth/verify-email",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/auth/resend-verification": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "POST /auth/resend-verification",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "POST /auth/forgot-password",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/auth/reset-password": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "POST /auth/reset-password",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "GET /users",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "GET /users/{id}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["Users"],
+        "summary": "PATCH /users/{id}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}/profile-verification": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "PATCH /users/{id}/profile-verification",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/mine": {
+      "get": {
+        "tags": ["Subscriptions"],
+        "summary": "GET /subscriptions/mine",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/subscriptions/history": {
+      "get": {
+        "tags": ["Subscriptions"],
+        "summary": "GET /subscriptions/history",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/subscriptions/cancellations": {
+      "get": {
+        "tags": ["Subscriptions"],
+        "summary": "GET /subscriptions/cancellations",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/subscriptions/{subscriptionId}/confirm-payment": {
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "POST /subscriptions/{subscriptionId}/confirm-payment",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/{subscriptionId}/upgrade": {
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "POST /subscriptions/{subscriptionId}/upgrade",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/admin/plans/{planId}": {
+      "patch": {
+        "tags": ["Subscriptions"],
+        "summary": "PATCH /subscriptions/admin/plans/{planId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/admin/coupons/{couponId}": {
+      "patch": {
+        "tags": ["Subscriptions"],
+        "summary": "PATCH /subscriptions/admin/coupons/{couponId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/admin/config": {
+      "patch": {
+        "tags": ["Subscriptions"],
+        "summary": "PATCH /subscriptions/admin/config",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/admin/{subscriptionId}/renewal-failed": {
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "POST /subscriptions/admin/{subscriptionId}/renewal-failed",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/subscriptions/admin/grace-period/process-expirations": {
+      "post": {
+        "tags": ["Subscriptions"],
+        "summary": "POST /subscriptions/admin/grace-period/process-expirations",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/payments/ledger/mine": {
+      "get": {
+        "tags": ["Payments"],
+        "summary": "GET /payments/ledger/mine",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/payments/checkout-session": {
+      "post": {
+        "tags": ["Payments"],
+        "summary": "POST /payments/checkout-session",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/payments/admin/process-timeouts": {
+      "post": {
+        "tags": ["Payments"],
+        "summary": "POST /payments/admin/process-timeouts",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/draws/config/jackpot-funds": {
+      "post": {
+        "tags": ["Draws"],
+        "summary": "POST /draws/config/jackpot-funds",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/draws/config/jackpot-ledger": {
+      "get": {
+        "tags": ["Draws"],
+        "summary": "GET /draws/config/jackpot-ledger",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/draws/{id}": {
+      "get": {
+        "tags": ["Draws"],
+        "summary": "GET /draws/{id}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["Draws"],
+        "summary": "PATCH /draws/{id}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/draws/{id}/entries": {
+      "get": {
+        "tags": ["Draws"],
+        "summary": "GET /draws/{id}/entries",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/draws/{id}/result": {
+      "get": {
+        "tags": ["Draws"],
+        "summary": "GET /draws/{id}/result",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/draws/{id}/prize-pool": {
+      "get": {
+        "tags": ["Draws"],
+        "summary": "GET /draws/{id}/prize-pool",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/winners/mine/{id}": {
+      "get": {
+        "tags": ["Winners"],
+        "summary": "GET /winners/mine/{id}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/winners/admin/{id}": {
+      "get": {
+        "tags": ["Winners"],
+        "summary": "GET /winners/admin/{id}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/notifications/mine": {
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "GET /notifications/mine",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/notifications/{id}": {
+      "get": {
+        "tags": ["Notifications"],
+        "summary": "GET /notifications/{id}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["Notifications"],
+        "summary": "PATCH /notifications/{id}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/notifications": {
+      "post": {
+        "tags": ["Notifications"],
+        "summary": "POST /notifications",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/users": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/users",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/users/{userId}": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/users/{userId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/users/{userId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/users/{userId}/profile-verification": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/users/{userId}/profile-verification",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/plans": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/plans",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/plans",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/plans/{planId}": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/plans/{planId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/coupons": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/coupons",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/coupons",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/coupons/{couponId}": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/coupons/{couponId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "couponId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/subscription-config": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/subscription-config",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/subscription-config",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/subscriptions": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/subscriptions",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/subscriptions/{subscriptionId}": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/subscriptions/{subscriptionId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/subscriptions/{subscriptionId}/cancel": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/subscriptions/{subscriptionId}/cancel",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/subscriptions/{subscriptionId}/renewal-failed": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/subscriptions/{subscriptionId}/renewal-failed",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/subscriptions/grace-period/process-expirations": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/subscriptions/grace-period/process-expirations",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/subscriptions/{subscriptionId}/manual-adjustment": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/subscriptions/{subscriptionId}/manual-adjustment",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/payments",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/payments/{paymentId}": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/payments/{paymentId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/payments/{paymentId}/ledger": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/payments/{paymentId}/ledger",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/payments/process-timeouts": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/payments/process-timeouts",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/payments/{paymentId}/manual-adjustment": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/payments/{paymentId}/manual-adjustment",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/charities": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/charities",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/charities",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/charities/{charityId}": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/charities/{charityId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "charityId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/charities/contribution-rule": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/charities/contribution-rule",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/charities/contribution-rule",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/donations": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/donations",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/donations/{donationId}/manual-adjustment": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/donations/{donationId}/manual-adjustment",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "donationId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/payouts": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/payouts",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/payouts",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/payouts/{payoutId}": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/payouts/{payoutId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "payoutId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/charity-adjustments": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/charity-adjustments",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/scores": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/scores",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/scores/{scoreId}": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/scores/{scoreId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "scoreId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/draws": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/draws",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      },
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/draws",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/draws/{drawId}": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/draws/{drawId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "drawId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      },
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/draws/{drawId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "drawId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/draws/{drawId}/entries/generate": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/draws/{drawId}/entries/generate",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "drawId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/draws/{drawId}/simulations": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/draws/{drawId}/simulations",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "drawId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/draws/{drawId}/simulations",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "drawId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/draws/{drawId}/publish": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/draws/{drawId}/publish",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "drawId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/draws/{drawId}/result": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/draws/{drawId}/result",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "drawId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/draws/{drawId}/prize-pool": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/draws/{drawId}/prize-pool",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "drawId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/draws/jackpot-funds": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "POST /admin/draws/jackpot-funds",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/draws/jackpot-ledger": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/draws/jackpot-ledger",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/winners": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/winners",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/winners/{winnerId}": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/winners/{winnerId}",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "winnerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/winners/{winnerId}/proofs": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/winners/{winnerId}/proofs",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "winnerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/admin/winners/{winnerId}/proofs/{proofId}/review": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/winners/{winnerId}/proofs/{proofId}/review",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "winnerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "proofId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/winners/{winnerId}/payout": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "PATCH /admin/winners/{winnerId}/payout",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "winnerId",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "security": [{ "BearerAuth": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": { "type": "object", "additionalProperties": true }
+            }
+          }
+        }
+      }
+    },
+    "/admin/audit-events": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "GET /admin/audit-events",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/reports/overview": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "GET /reports/overview",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/reports/users": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "GET /reports/users",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/reports/subscriptions": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "GET /reports/subscriptions",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/reports/payments": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "GET /reports/payments",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/reports/charities": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "GET /reports/charities",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/reports/draws": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "GET /reports/draws",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    },
+    "/reports/winners": {
+      "get": {
+        "tags": ["Reports"],
+        "summary": "GET /reports/winners",
+        "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuccessResponse" }
+              }
+            }
+          },
+          "default": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        },
+        "security": [{ "BearerAuth": [] }]
+      }
+    }
+  }
+}

@@ -1,0 +1,3452 @@
+{
+  "info": {
+    "name": "Swing Pool Backend API",
+    "description": "Auto-generated Postman collection from backend OpenAPI specification.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "GET /admin/audit-events",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/audit-events",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "audit-events"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/charities",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/charities",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "charities"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/charities/contribution-rule",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/charities/contribution-rule",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "charities", "contribution-rule"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/coupons",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "coupons"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/donations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/donations",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "donations"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/draws",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/draws/{drawId}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/{{drawId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "{{drawId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/draws/{drawId}/prize-pool",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/{{drawId}}/prize-pool",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "{{drawId}}", "prize-pool"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/draws/{drawId}/result",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/{{drawId}}/result",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "{{drawId}}", "result"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/draws/{drawId}/simulations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/{{drawId}}/simulations",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "{{drawId}}", "simulations"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/draws/jackpot-ledger",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/jackpot-ledger",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "jackpot-ledger"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/payments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "payments"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/payments/{paymentId}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/payments/{{paymentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "payments", "{{paymentId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/payments/{paymentId}/ledger",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/payments/{{paymentId}}/ledger",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "payments", "{{paymentId}}", "ledger"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/payouts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/payouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "payouts"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/plans",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "plans"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/scores",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/scores",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "scores"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/subscription-config",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/subscription-config",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "subscription-config"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/subscriptions",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "subscriptions"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/subscriptions/{subscriptionId}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/subscriptions/{{subscriptionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "subscriptions", "{{subscriptionId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/users/{userId}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{userId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/winners",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/winners",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "winners"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/winners/{winnerId}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/winners/{{winnerId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "winners", "{{winnerId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /admin/winners/{winnerId}/proofs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/winners/{{winnerId}}/proofs",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "winners", "{{winnerId}}", "proofs"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/charities/{charityId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/charities/{{charityId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "charities", "{{charityId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/charities/contribution-rule",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/charities/contribution-rule",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "charities", "contribution-rule"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/coupons/{couponId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/coupons/{{couponId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "coupons", "{{couponId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/donations/{donationId}/manual-adjustment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/donations/{{donationId}}/manual-adjustment",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "admin",
+                "donations",
+                "{{donationId}}",
+                "manual-adjustment"
+              ]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/draws/{drawId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/{{drawId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "{{drawId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/payments/{paymentId}/manual-adjustment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/payments/{{paymentId}}/manual-adjustment",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "admin",
+                "payments",
+                "{{paymentId}}",
+                "manual-adjustment"
+              ]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/payouts/{payoutId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/payouts/{{payoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "payouts", "{{payoutId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/plans/{planId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/plans/{{planId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "plans", "{{planId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/scores/{scoreId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/scores/{{scoreId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "scores", "{{scoreId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/subscription-config",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/subscription-config",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "subscription-config"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/subscriptions/{subscriptionId}/manual-adjustment",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/subscriptions/{{subscriptionId}}/manual-adjustment",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "admin",
+                "subscriptions",
+                "{{subscriptionId}}",
+                "manual-adjustment"
+              ]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/users/{userId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/{{userId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{userId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/users/{userId}/profile-verification",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users/{{userId}}/profile-verification",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users", "{{userId}}", "profile-verification"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/winners/{winnerId}/payout",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/winners/{{winnerId}}/payout",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "winners", "{{winnerId}}", "payout"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /admin/winners/{winnerId}/proofs/{proofId}/review",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/winners/{{winnerId}}/proofs/{{proofId}}/review",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "admin",
+                "winners",
+                "{{winnerId}}",
+                "proofs",
+                "{{proofId}}",
+                "review"
+              ]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/charities",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/charities",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "charities"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/charity-adjustments",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/charity-adjustments",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "charity-adjustments"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/coupons",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "coupons"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/draws",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/draws/{drawId}/entries/generate",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/{{drawId}}/entries/generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "{{drawId}}", "entries", "generate"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/draws/{drawId}/publish",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/{{drawId}}/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "{{drawId}}", "publish"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/draws/{drawId}/simulations",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/{{drawId}}/simulations",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "{{drawId}}", "simulations"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/draws/jackpot-funds",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/draws/jackpot-funds",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "draws", "jackpot-funds"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/payments/process-timeouts",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/payments/process-timeouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "payments", "process-timeouts"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/payouts",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/payouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "payouts"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/plans",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "plans"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/subscriptions/{subscriptionId}/cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/subscriptions/{{subscriptionId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "subscriptions", "{{subscriptionId}}", "cancel"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/subscriptions/{subscriptionId}/renewal-failed",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/subscriptions/{{subscriptionId}}/renewal-failed",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "admin",
+                "subscriptions",
+                "{{subscriptionId}}",
+                "renewal-failed"
+              ]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /admin/subscriptions/grace-period/process-expirations",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/admin/subscriptions/grace-period/process-expirations",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "admin",
+                "subscriptions",
+                "grace-period",
+                "process-expirations"
+              ]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "GET /auth/me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/forgot-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/forgot-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "forgot-password"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/login",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Authenticate user and return token pair",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "logout"]
+            },
+            "description": "Revoke refresh session and denylist active access token jti",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/refresh",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            },
+            "description": "Rotate refresh token and mint new access/refresh pair",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/register",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account and return token pair",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/resend-verification",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/resend-verification",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "resend-verification"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/reset-password",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "reset-password"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /auth/verify-email",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/verify-email",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "verify-email"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Charities",
+      "item": [
+        {
+          "name": "GET /charities",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/charities",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities"]
+            },
+            "description": "List charities"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /charities/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/charities/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "{{id}}"]
+            },
+            "description": "Get charity by id"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /charities/admin/payouts",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/charities/admin/payouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "admin", "payouts"]
+            },
+            "description": "Admin list charity payout ledger entries",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /charities/admin/reports/summary",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/charities/admin/reports/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "admin", "reports", "summary"]
+            },
+            "description": "Admin fetch charity allocation and payout aggregates",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /charities/my/donations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/charities/my/donations",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "my", "donations"]
+            },
+            "description": "List authenticated user donations",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /charities/my/selection",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/charities/my/selection",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "my", "selection"]
+            },
+            "description": "Get current authenticated user charity selection",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /charities/my/selections",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/charities/my/selections",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "my", "selections"]
+            },
+            "description": "List authenticated user charity selection history",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /charities/rules/effective",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/charities/rules/effective",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "rules", "effective"]
+            },
+            "description": "Get active charity contribution rule"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /charities/{id}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/charities/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "{{id}}"]
+            },
+            "description": "Admin update charity",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /charities/admin/payouts/{payoutId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/charities/admin/payouts/{{payoutId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "admin", "payouts", "{{payoutId}}"]
+            },
+            "description": "Admin update payout processing status",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /charities/admin/rules",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/charities/admin/rules",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "admin", "rules"]
+            },
+            "description": "Admin update contribution rule percentages",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /charities",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/charities",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities"]
+            },
+            "description": "Admin create charity",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /charities/admin/adjustments",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/charities/admin/adjustments",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "admin", "adjustments"]
+            },
+            "description": "Admin create manual charity adjustment",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /charities/admin/payouts",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/charities/admin/payouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "admin", "payouts"]
+            },
+            "description": "Admin create payout ledger entry",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /charities/my/donations/intents",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/charities/my/donations/intents",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "my", "donations", "intents"]
+            },
+            "description": "Create independent donation intent linked to payment infrastructure",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /charities/my/selection",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/charities/my/selection",
+              "host": ["{{baseUrl}}"],
+              "path": ["charities", "my", "selection"]
+            },
+            "description": "Set charity selection for future payments",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Draws",
+      "item": [
+        {
+          "name": "GET /draws",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/draws",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /draws/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /draws/{id}/entries",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}/entries",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}", "entries"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /draws/{id}/prize-pool",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}/prize-pool",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}", "prize-pool"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /draws/{id}/result",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}/result",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}", "result"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /draws/{id}/simulations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}/simulations",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}", "simulations"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /draws/config",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/draws/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "config"]
+            },
+            "description": "Get effective draw engine configuration",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /draws/config/jackpot-ledger",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/draws/config/jackpot-ledger",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "config", "jackpot-ledger"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /draws/{id}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /draws/config",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/draws/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "config"]
+            },
+            "description": "Update draw engine configuration",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /draws",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/draws",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws"]
+            },
+            "description": "Create monthly draw snapshot",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /draws/{id}/entries/generate",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}/entries/generate",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}", "entries", "generate"]
+            },
+            "description": "Generate automatic entries for eligible users",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /draws/{id}/publish",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}/publish",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}", "publish"]
+            },
+            "description": "Publish immutable draw result, winners, and prize pool snapshot",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /draws/{id}/simulations",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/draws/{{id}}/simulations",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "{{id}}", "simulations"]
+            },
+            "description": "Run non-publishing draw simulation",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /draws/config/jackpot-funds",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/draws/config/jackpot-funds",
+              "host": ["{{baseUrl}}"],
+              "path": ["draws", "config", "jackpot-funds"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "GET /",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend."
+          },
+          "response": []
+        },
+        {
+          "name": "GET /health",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Returns service and process health metadata."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "GET /notifications/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "{{id}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /notifications/mine",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "mine"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /notifications/{id}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications", "{{id}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /notifications",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/notifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["notifications"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "GET /payments/ledger/mine",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/payments/ledger/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "ledger", "mine"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /payments/mine",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/payments/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "mine"]
+            },
+            "description": "List authenticated user payments",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /payments/admin/process-timeouts",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/admin/process-timeouts",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "admin", "process-timeouts"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /payments/checkout-session",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/checkout-session",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "checkout-session"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /payments/intents",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/intents",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "intents"]
+            },
+            "description": "Create Stripe payment intent and local payment attempt record",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /payments/webhooks/stripe",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/payments/webhooks/stripe",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments", "webhooks", "stripe"]
+            },
+            "description": "Stripe webhook receiver (source of truth for payment finalization)",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "GET /reports/charities",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/reports/charities",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "charities"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /reports/draws",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/reports/draws",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "draws"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /reports/overview",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/reports/overview",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "overview"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /reports/payments",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/reports/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "payments"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /reports/subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/reports/subscriptions",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "subscriptions"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /reports/users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/reports/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "users"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /reports/winners",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/reports/winners",
+              "host": ["{{baseUrl}}"],
+              "path": ["reports", "winners"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Scores",
+      "item": [
+        {
+          "name": "GET /scores/mine",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/scores/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["scores", "mine"]
+            },
+            "description": "List authenticated user score history with pagination",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /scores/mine/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/scores/mine/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["scores", "mine", "{{id}}"]
+            },
+            "description": "Get score history record by id for authenticated user",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /scores/mine/competition/eligibility",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/scores/mine/competition/eligibility",
+              "host": ["{{baseUrl}}"],
+              "path": ["scores", "mine", "competition", "eligibility"]
+            },
+            "description": "Get current competition eligibility status",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /scores/mine/competition/qualifying",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/scores/mine/competition/qualifying",
+              "host": ["{{baseUrl}}"],
+              "path": ["scores", "mine", "competition", "qualifying"]
+            },
+            "description": "Get latest five qualifying competition scores",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /scores/admin/{id}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/scores/admin/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["scores", "admin", "{{id}}"]
+            },
+            "description": "Admin edit score with full audit logging",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /scores",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/scores",
+              "host": ["{{baseUrl}}"],
+              "path": ["scores"]
+            },
+            "description": "Submit user score (stored in full history and confirmed immutable)",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Subscriptions",
+      "item": [
+        {
+          "name": "GET /subscriptions/admin/coupons",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "admin", "coupons"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /subscriptions/admin/plans",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "admin", "plans"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /subscriptions/cancellations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/cancellations",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "cancellations"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /subscriptions/config",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "config"]
+            },
+            "description": "Get effective subscription configuration"
+          },
+          "response": []
+        },
+        {
+          "name": "GET /subscriptions/history",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/history",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "history"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /subscriptions/mine",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "mine"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /subscriptions/plans",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "plans"]
+            },
+            "description": "List active subscription plans"
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /subscriptions/admin/config",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/config",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "admin", "config"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /subscriptions/admin/coupons/{couponId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/coupons/{{couponId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "admin", "coupons", "{{couponId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /subscriptions/admin/plans/{planId}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/plans/{{planId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "admin", "plans", "{{planId}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions"]
+            },
+            "description": "Create a subscription in pending payment state",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions/{subscriptionId}/cancel",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/{{subscriptionId}}/cancel",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "{{subscriptionId}}", "cancel"]
+            },
+            "description": "Cancel a subscription immediately",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions/{subscriptionId}/confirm-payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/{{subscriptionId}}/confirm-payment",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "{{subscriptionId}}", "confirm-payment"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions/{subscriptionId}/upgrade",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/{{subscriptionId}}/upgrade",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "{{subscriptionId}}", "upgrade"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions/{subscriptionId}/upgrade-preview",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/{{subscriptionId}}/upgrade-preview",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "{{subscriptionId}}", "upgrade-preview"]
+            },
+            "description": "Preview prorated amount for an allowed upgrade path",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions/admin/{subscriptionId}/renewal-failed",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/{{subscriptionId}}/renewal-failed",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "subscriptions",
+                "admin",
+                "{{subscriptionId}}",
+                "renewal-failed"
+              ]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions/admin/coupons",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/coupons",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "admin", "coupons"]
+            },
+            "description": "Admin create subscription coupon",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions/admin/grace-period/process-expirations",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/grace-period/process-expirations",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "subscriptions",
+                "admin",
+                "grace-period",
+                "process-expirations"
+              ]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /subscriptions/admin/plans",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/subscriptions/admin/plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["subscriptions", "admin", "plans"]
+            },
+            "description": "Admin create a subscription plan",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "GET /users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": ["{{baseUrl}}"],
+              "path": ["users"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{id}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Get authenticated user profile",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /users/me/profile-status",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/users/me/profile-status",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me", "profile-status"]
+            },
+            "description": "Get profile verification state used for subscription eligibility",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /users/{id}",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{id}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /users/{id}/profile-verification",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{id}}/profile-verification",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "{{id}}", "profile-verification"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /users/me",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /users/me/profile",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me", "profile"]
+            },
+            "description": "Complete or update authenticated user profile fields",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Winners",
+      "item": [
+        {
+          "name": "GET /winners/{winnerId}/proofs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/winners/{{winnerId}}/proofs",
+              "host": ["{{baseUrl}}"],
+              "path": ["winners", "{{winnerId}}", "proofs"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /winners/admin",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/winners/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["winners", "admin"]
+            },
+            "description": "Admin list winners by draw and payout status",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /winners/admin/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/winners/admin/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["winners", "admin", "{{id}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /winners/mine",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/winners/mine",
+              "host": ["{{baseUrl}}"],
+              "path": ["winners", "mine"]
+            },
+            "description": "List authenticated user winner records",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET /winners/mine/{id}",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{baseUrl}}/winners/mine/{{id}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["winners", "mine", "{{id}}"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /winners/admin/{winnerId}/payout",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/winners/admin/{{winnerId}}/payout",
+              "host": ["{{baseUrl}}"],
+              "path": ["winners", "admin", "{{winnerId}}", "payout"]
+            },
+            "description": "Admin update payout workflow status",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH /winners/admin/{winnerId}/proofs/{proofId}/review",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/winners/admin/{{winnerId}}/proofs/{{proofId}}/review",
+              "host": ["{{baseUrl}}"],
+              "path": [
+                "winners",
+                "admin",
+                "{{winnerId}}",
+                "proofs",
+                "{{proofId}}",
+                "review"
+              ]
+            },
+            "description": "Admin approve or reject submitted proof",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /winners/{winnerId}/proofs",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/winners/{{winnerId}}/proofs",
+              "host": ["{{baseUrl}}"],
+              "path": ["winners", "{{winnerId}}", "proofs"]
+            },
+            "description": "Submit winner proof files (max 2 files)",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST /winners/admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/winners/admin",
+              "host": ["{{baseUrl}}"],
+              "path": ["winners", "admin"]
+            },
+            "description": "Auto-generated OpenAPI coverage entry. Route is implemented and available in the backend.",
+            "body": { "mode": "raw", "raw": "{\n  \"example\": true\n}" },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                { "key": "token", "value": "{{accessToken}}", "type": "string" }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000/api/v1" },
+    { "key": "accessToken", "value": "" }
+  ]
+}

@@ -1,0 +1,11 @@
+export const APP_NAME = "Swing Pool API";
+export const API_PREFIX_DEFAULT = "/api";
+export const API_VERSION_DEFAULT = "v1";
+export const REQUEST_ID_HEADER = "x-request-id";
+export const IDEMPOTENCY_KEY_HEADER = "idempotency-key";
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_PAGE_SIZE = 20;
+export const MAX_PAGE_SIZE = 100;
+export const DEFAULT_CURRENCY = "inr";
+export const DEFAULT_CURRENCY_CODE = "INR";
+export const DAY_IN_MS = 24 * 60 * 60 * 1000;

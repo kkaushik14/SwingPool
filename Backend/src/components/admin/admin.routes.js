@@ -1,0 +1,389 @@
+import { Router } from "express";
+
+import { USER_ROLES } from "../../enums/index.js";
+import {
+  authenticate,
+  authorizeRoles,
+  validateRequest,
+} from "../../middlewares/index.js";
+import { asyncHandler } from "../../utils/index.js";
+
+import {
+  addJackpotFund,
+  cancelSubscription,
+  createCharity,
+  createCharityManualAdjustment,
+  createCoupon,
+  createDraw,
+  createDrawSimulation,
+  createPayout,
+  createPlan,
+  generateDrawEntries,
+  getContributionRule,
+  getDrawById,
+  getDrawPrizePool,
+  getDrawResult,
+  getPaymentById,
+  getSubscriptionById,
+  getSubscriptionConfig,
+  getUserById,
+  getWinnerById,
+  listAuditEvents,
+  listCharities,
+  listCoupons,
+  listDonations,
+  listDrawSimulations,
+  listDraws,
+  listJackpotLedger,
+  listPaymentLedger,
+  listPayments,
+  listPayouts,
+  listPlans,
+  listScores,
+  listSubscriptions,
+  listUsers,
+  listWinnerProofs,
+  listWinners,
+  manualAdjustDonation,
+  manualAdjustPayment,
+  manualAdjustSubscription,
+  markSubscriptionRenewalFailed,
+  processGracePeriodExpirations,
+  processPaymentTimeouts,
+  publishDraw,
+  reviewWinnerProof,
+  updateCharity,
+  updateContributionRule,
+  updateCoupon,
+  updateDraw,
+  updatePayout,
+  updatePlan,
+  updateScore,
+  updateSubscriptionConfig,
+  updateUser,
+  updateWinnerPayout,
+  verifyUserProfile,
+} from "./admin.controller.js";
+import {
+  addManualJackpotFundSchema,
+  adminUserIdParamsSchema,
+  cancelSubscriptionSchema,
+  createCharityManualAdjustmentSchema,
+  createCharitySchema,
+  createCouponSchema,
+  createDrawSchema,
+  createPayoutSchema,
+  createPlanSchema,
+  drawIdParamsSchema,
+  listAuditEventsQuerySchema,
+  listCharitiesQuerySchema,
+  listCouponsQuerySchema,
+  listDonationsQuerySchema,
+  listDrawsQuerySchema,
+  listPaymentsQuerySchema,
+  listPayoutsQuerySchema,
+  listPlansQuerySchema,
+  listScoresQuerySchema,
+  listSubscriptionsQuerySchema,
+  listUsersQuerySchema,
+  listWinnersQuerySchema,
+  manualAdjustDonationSchema,
+  manualAdjustPaymentSchema,
+  manualAdjustSubscriptionSchema,
+  paymentIdParamsSchema,
+  processGraceExpirySchema,
+  processPaymentTimeoutSchema,
+  renewalFailedSchema,
+  reviewWinnerProofSchema,
+  runDrawSimulationSchema,
+  subscriptionIdParamsSchema,
+  updateCharitySchema,
+  updateContributionRuleSchema,
+  updateCouponSchema,
+  updateDrawSchema,
+  updatePayoutSchema,
+  updatePlanSchema,
+  updateScoreSchema,
+  updateSubscriptionConfigSchema,
+  updateUserSchema,
+  updateWinnerPayoutSchema,
+  verifyUserProfileSchema,
+  winnerIdParamsSchema,
+} from "./admin.validator.js";
+
+const router = Router();
+
+router.use(authenticate, authorizeRoles(USER_ROLES.ADMIN));
+
+router.get(
+  "/users",
+  validateRequest(listUsersQuerySchema),
+  asyncHandler(listUsers),
+);
+router.get(
+  "/users/:userId",
+  validateRequest(adminUserIdParamsSchema),
+  asyncHandler(getUserById),
+);
+router.patch(
+  "/users/:userId",
+  validateRequest(updateUserSchema),
+  asyncHandler(updateUser),
+);
+router.patch(
+  "/users/:userId/profile-verification",
+  validateRequest(verifyUserProfileSchema),
+  asyncHandler(verifyUserProfile),
+);
+
+router.get(
+  "/plans",
+  validateRequest(listPlansQuerySchema),
+  asyncHandler(listPlans),
+);
+router.post(
+  "/plans",
+  validateRequest(createPlanSchema),
+  asyncHandler(createPlan),
+);
+router.patch(
+  "/plans/:planId",
+  validateRequest(updatePlanSchema),
+  asyncHandler(updatePlan),
+);
+
+router.get(
+  "/coupons",
+  validateRequest(listCouponsQuerySchema),
+  asyncHandler(listCoupons),
+);
+router.post(
+  "/coupons",
+  validateRequest(createCouponSchema),
+  asyncHandler(createCoupon),
+);
+router.patch(
+  "/coupons/:couponId",
+  validateRequest(updateCouponSchema),
+  asyncHandler(updateCoupon),
+);
+
+router.get("/subscription-config", asyncHandler(getSubscriptionConfig));
+router.patch(
+  "/subscription-config",
+  validateRequest(updateSubscriptionConfigSchema),
+  asyncHandler(updateSubscriptionConfig),
+);
+
+router.get(
+  "/subscriptions",
+  validateRequest(listSubscriptionsQuerySchema),
+  asyncHandler(listSubscriptions),
+);
+router.get(
+  "/subscriptions/:subscriptionId",
+  validateRequest(subscriptionIdParamsSchema),
+  asyncHandler(getSubscriptionById),
+);
+router.post(
+  "/subscriptions/:subscriptionId/cancel",
+  validateRequest(cancelSubscriptionSchema),
+  asyncHandler(cancelSubscription),
+);
+router.post(
+  "/subscriptions/:subscriptionId/renewal-failed",
+  validateRequest(renewalFailedSchema),
+  asyncHandler(markSubscriptionRenewalFailed),
+);
+router.post(
+  "/subscriptions/grace-period/process-expirations",
+  validateRequest(processGraceExpirySchema),
+  asyncHandler(processGracePeriodExpirations),
+);
+router.patch(
+  "/subscriptions/:subscriptionId/manual-adjustment",
+  validateRequest(manualAdjustSubscriptionSchema),
+  asyncHandler(manualAdjustSubscription),
+);
+
+router.get(
+  "/payments",
+  validateRequest(listPaymentsQuerySchema),
+  asyncHandler(listPayments),
+);
+router.get(
+  "/payments/:paymentId",
+  validateRequest(paymentIdParamsSchema),
+  asyncHandler(getPaymentById),
+);
+router.get(
+  "/payments/:paymentId/ledger",
+  validateRequest(paymentIdParamsSchema),
+  asyncHandler(listPaymentLedger),
+);
+router.post(
+  "/payments/process-timeouts",
+  validateRequest(processPaymentTimeoutSchema),
+  asyncHandler(processPaymentTimeouts),
+);
+router.patch(
+  "/payments/:paymentId/manual-adjustment",
+  validateRequest(manualAdjustPaymentSchema),
+  asyncHandler(manualAdjustPayment),
+);
+
+router.get(
+  "/charities",
+  validateRequest(listCharitiesQuerySchema),
+  asyncHandler(listCharities),
+);
+router.post(
+  "/charities",
+  validateRequest(createCharitySchema),
+  asyncHandler(createCharity),
+);
+router.patch(
+  "/charities/:charityId",
+  validateRequest(updateCharitySchema),
+  asyncHandler(updateCharity),
+);
+router.get("/charities/contribution-rule", asyncHandler(getContributionRule));
+router.patch(
+  "/charities/contribution-rule",
+  validateRequest(updateContributionRuleSchema),
+  asyncHandler(updateContributionRule),
+);
+
+router.get(
+  "/donations",
+  validateRequest(listDonationsQuerySchema),
+  asyncHandler(listDonations),
+);
+router.patch(
+  "/donations/:donationId/manual-adjustment",
+  validateRequest(manualAdjustDonationSchema),
+  asyncHandler(manualAdjustDonation),
+);
+
+router.get(
+  "/payouts",
+  validateRequest(listPayoutsQuerySchema),
+  asyncHandler(listPayouts),
+);
+router.post(
+  "/payouts",
+  validateRequest(createPayoutSchema),
+  asyncHandler(createPayout),
+);
+router.patch(
+  "/payouts/:payoutId",
+  validateRequest(updatePayoutSchema),
+  asyncHandler(updatePayout),
+);
+router.post(
+  "/charity-adjustments",
+  validateRequest(createCharityManualAdjustmentSchema),
+  asyncHandler(createCharityManualAdjustment),
+);
+
+router.get(
+  "/scores",
+  validateRequest(listScoresQuerySchema),
+  asyncHandler(listScores),
+);
+router.patch(
+  "/scores/:scoreId",
+  validateRequest(updateScoreSchema),
+  asyncHandler(updateScore),
+);
+
+router.get(
+  "/draws",
+  validateRequest(listDrawsQuerySchema),
+  asyncHandler(listDraws),
+);
+router.get(
+  "/draws/:drawId",
+  validateRequest(drawIdParamsSchema),
+  asyncHandler(getDrawById),
+);
+router.post(
+  "/draws",
+  validateRequest(createDrawSchema),
+  asyncHandler(createDraw),
+);
+router.patch(
+  "/draws/:drawId",
+  validateRequest(updateDrawSchema),
+  asyncHandler(updateDraw),
+);
+router.post(
+  "/draws/:drawId/entries/generate",
+  validateRequest(drawIdParamsSchema),
+  asyncHandler(generateDrawEntries),
+);
+router.post(
+  "/draws/:drawId/simulations",
+  validateRequest(runDrawSimulationSchema),
+  asyncHandler(createDrawSimulation),
+);
+router.get(
+  "/draws/:drawId/simulations",
+  validateRequest(drawIdParamsSchema),
+  asyncHandler(listDrawSimulations),
+);
+router.post(
+  "/draws/:drawId/publish",
+  validateRequest(drawIdParamsSchema),
+  asyncHandler(publishDraw),
+);
+router.get(
+  "/draws/:drawId/result",
+  validateRequest(drawIdParamsSchema),
+  asyncHandler(getDrawResult),
+);
+router.get(
+  "/draws/:drawId/prize-pool",
+  validateRequest(drawIdParamsSchema),
+  asyncHandler(getDrawPrizePool),
+);
+router.post(
+  "/draws/jackpot-funds",
+  validateRequest(addManualJackpotFundSchema),
+  asyncHandler(addJackpotFund),
+);
+router.get("/draws/jackpot-ledger", asyncHandler(listJackpotLedger));
+
+router.get(
+  "/winners",
+  validateRequest(listWinnersQuerySchema),
+  asyncHandler(listWinners),
+);
+router.get(
+  "/winners/:winnerId",
+  validateRequest(winnerIdParamsSchema),
+  asyncHandler(getWinnerById),
+);
+router.get(
+  "/winners/:winnerId/proofs",
+  validateRequest(winnerIdParamsSchema),
+  asyncHandler(listWinnerProofs),
+);
+router.patch(
+  "/winners/:winnerId/proofs/:proofId/review",
+  validateRequest(reviewWinnerProofSchema),
+  asyncHandler(reviewWinnerProof),
+);
+router.patch(
+  "/winners/:winnerId/payout",
+  validateRequest(updateWinnerPayoutSchema),
+  asyncHandler(updateWinnerPayout),
+);
+
+router.get(
+  "/audit-events",
+  validateRequest(listAuditEventsQuerySchema),
+  asyncHandler(listAuditEvents),
+);
+
+export { router as adminRouter };
